@@ -16,7 +16,7 @@ namespace WarehouseChallenge.Infrastructure.Repositories
             _warehouseDbContext = warehouseDbContext;
         }
 
-        public string AddNewTransaction(Transaction transaction)
+        public string AddNewTransactionByProcedure(Transaction transaction)
         {
             try
             {
@@ -42,7 +42,7 @@ namespace WarehouseChallenge.Infrastructure.Repositories
             }
         }
 
-        public int GetProductStockInWarehouse(int productId, int warehouseId)
+        public int GetProductStockInWarehouseByProcedure(int productId, int warehouseId)
         {
             try
             {
@@ -62,7 +62,7 @@ namespace WarehouseChallenge.Infrastructure.Repositories
             }
         }
 
-        public IEnumerable<Transaction> GetTransactionsByType(TransactionType transactionType)
+        public IEnumerable<Transaction> GetTransactionsByTypeByProcedure(TransactionType transactionType)
         {
             try
             {
@@ -73,6 +73,79 @@ namespace WarehouseChallenge.Infrastructure.Repositories
                     .ToList();
 
                 return result;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public Transaction DoesExist(int transactionId)
+        {
+            try
+            {
+                return _warehouseDbContext.Transactions.FirstOrDefault(f => f.TransactionId == transactionId);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public string AddNewTransaction(Transaction transaction)
+        {
+            try
+            {
+                _warehouseDbContext.Transactions.Add(transaction);
+
+                var product = _warehouseDbContext.Products.FirstOrDefault(w => w.ProductId == transaction.ProductId);
+                if (transaction.TransactionType == "Purchase")
+                    product.StockQuantity += transaction.Quantity;
+                else product.StockQuantity -= transaction.Quantity;
+
+                _warehouseDbContext.SaveChanges();
+
+                return "Transaction added successfully";
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public int GetProductStockInWarehouse(int productId, int warehouseId)
+        {
+            try
+            {
+                var purcahsedProducts = _warehouseDbContext
+                    .Transactions
+                    .Where(w => w.ProductId == productId
+                            && w.WarehouseId == warehouseId
+                            && w.TransactionType == "Purchase")
+                    .Sum(s => s.Quantity);
+                var soldProducts = _warehouseDbContext
+                    .Transactions
+                    .Where(w => w.ProductId == productId
+                            && w.WarehouseId == warehouseId
+                            && w.TransactionType == "Sale")
+                    .Sum(s => s.Quantity);
+
+                return purcahsedProducts - soldProducts;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public IEnumerable<Transaction> GetTransactionsByType(TransactionType transactionType)
+        {
+            try
+            {
+                var result = _warehouseDbContext.Transactions.Where(w => w.TransactionType == transactionType.ToString());
+
+                return result.ToList();
             }
             catch (Exception)
             {

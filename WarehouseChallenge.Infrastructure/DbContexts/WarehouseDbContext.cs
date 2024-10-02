@@ -12,5 +12,6 @@ namespace WarehouseChallenge.Infrastructure.Data
 
         public DbSet<Product> Products { get; set; }
         public DbSet<Warehouse> Warehouses { get; set; }
+        public DbSet<Transaction> Transactions { get; set; }
     }
 }

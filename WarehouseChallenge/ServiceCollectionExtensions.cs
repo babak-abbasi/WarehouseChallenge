@@ -18,6 +18,7 @@ namespace WarehouseChallenge.WebAPI
             services.AddScoped<ITransactionService, TransactionService>();
             services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped<ITransactionRepository, TransactionRepository>();
+            services.AddScoped<IWarehouseRepository, WarehouseRepository>();
         }
     }
 }

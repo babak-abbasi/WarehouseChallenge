@@ -22,6 +22,39 @@ namespace WarehouseChallenge.Controllers
             _transactionService = transactionService;
         }
 
+        [HttpPost(Name = "AddNewProductByProcedure")]
+        public IActionResult AddNewProductByProcedure([FromBody] NewProductModel request)
+            => Ok(_productService.AddNewProductByProcedure(new()
+            {
+                ProductId = request.ProductId,
+                ProductName = request.ProductName,
+                Price = request.Price
+            }));
+
+        [HttpPost(Name = "AddNewTransactionByProcedure")]
+        public IActionResult AddNewTransactionByProcedure([FromBody] NewTransactionModel request)
+            => Ok(_transactionService.AddNewTransactionByProcedure(new()
+            {
+                TransactionId = request.TransactionId,
+                ProductId = request.ProductId,
+                WarehouseId = request.WarehouseId,
+                Quantity = request.Quantity,
+                TransactionDate = request.TransactionDate,
+                TransactionType = request.TransactionType
+            }));
+
+        [HttpGet(Name = "ProductStockInWarehouseByProcedure")]
+        public IActionResult ProductStockInWarehouseByProcedure([FromQuery] GetProductStockInWarehouseModel request)
+            => Ok(_transactionService.GetProductStockInWarehouseByProcedure(new()
+            {
+                ProductId = request.ProductId,
+                WarehouseId = request.WarehouseId
+            }));
+
+        [HttpGet(Name = "TransactionsByTypeByProcedure")]
+        public IActionResult TransactionsByTypeByProcedure([FromQuery] TransactionType request)
+            => Ok(_transactionService.GetTransactionsByTypeByProcedure(request));
+
         [HttpPost(Name = "AddNewProduct")]
         public IActionResult AddNewProduct([FromBody] NewProductModel request)
             => Ok(_productService.AddNewProduct(new()

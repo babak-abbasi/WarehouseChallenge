@@ -12,7 +12,7 @@ BEGIN
 	--It could be auto increment
 	IF(@TransactionId <= 0)
 	BEGIN
-		SELECT 'ProductId is not valid' AS ErrorMessage;
+		SELECT '@TransactionId is not valid' AS ErrorMessage;
 		RETURN
 	END
 
