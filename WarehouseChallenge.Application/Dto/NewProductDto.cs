@@ -1,4 +1,4 @@
-﻿namespace Warehouse.Application.Dto
+﻿namespace WarehouseChallenge.Application.Dto
 {
     public class NewProductDto
     {

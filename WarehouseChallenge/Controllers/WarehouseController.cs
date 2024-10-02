@@ -1,17 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Data.SqlClient;
-using Microsoft.EntityFrameworkCore;
-using Warehouse.Application.IServices;
-using Warehouse.Application.Services;
-using WarehouseChallenge.Domain.Entities;
-using WarehouseChallenge.Domain.Repositories;
-using WarehouseChallenge.Infrastructure.Data;
+using WarehouseChallenge.Application.IServices;
 using WarehouseChallenge.WebAPI.RequestModels;
 
 namespace WarehouseChallenge.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("[controller]/[action]")]
     public class WarehouseController : ControllerBase
     {
         private readonly ILogger<WarehouseController> _logger;
@@ -36,13 +30,21 @@ namespace WarehouseChallenge.Controllers
                 StockQuantity = request.StockQuantity
             });
 
-            //_warehouseDbContext.Database.ExecuteSqlRaw(
-            //            "EXEC AddNewProduct @ProductId, @ProductName, @Price, @StockQuantity",
-            //            new SqlParameter("@ProductId", request.ProductId),
-            //            new SqlParameter("@ProductName", request.ProductName),
-            //            new SqlParameter("@Price", request.Price),
-            //            new SqlParameter("@StockQuantity", request.StockQuantity)
-            //        );
+            return Ok();
+        }
+
+        [HttpPost(Name = "AddNewTransaction")]
+        public IActionResult AddNewTransaction([FromBody] NewTransactionModel request)
+        {
+            _productService.AddNewTransaction(new()
+            {
+                TransactionId = request.TransactionId,
+                ProductId = request.ProductId,
+                WarehouseId = request.WarehouseId,
+                Quantity = request.Quantity,
+                TransactionDate = request.TransactionDate,
+                TransactionType = request.TransactionType
+            });
 
             return Ok();
         }

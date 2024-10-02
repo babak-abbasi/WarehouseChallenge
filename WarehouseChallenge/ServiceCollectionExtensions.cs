@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Warehouse.Application.IServices;
-using Warehouse.Application.Services;
+using WarehouseChallenge.Application.IServices;
+using WarehouseChallenge.Application.Services;
 using WarehouseChallenge.Domain.Repositories;
 using WarehouseChallenge.Infrastructure.Data;
 using WarehouseChallenge.Infrastructure.Repositories;
