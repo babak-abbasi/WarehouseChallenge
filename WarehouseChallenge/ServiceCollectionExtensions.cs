@@ -15,7 +15,9 @@ namespace WarehouseChallenge.WebAPI
                 options.UseSqlServer("Data Source=.;Initial Catalog=Warehouse;User ID=sa;Password=1qaz!QAZ;TrustServerCertificate=Yes;"));
 
             services.AddScoped<IProductService, ProductService>();
+            services.AddScoped<ITransactionService, TransactionService>();
             services.AddScoped<IProductRepository, ProductRepository>();
+            services.AddScoped<ITransactionRepository, TransactionRepository>();
         }
     }
 }

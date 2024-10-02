@@ -1,4 +1,4 @@
-﻿using WarehouseChallenge.Domain;
+﻿using WarehouseChallenge.Domain.Enum;
 
 namespace WarehouseChallenge.WebAPI.RequestModels
 {
@@ -6,9 +6,9 @@ namespace WarehouseChallenge.WebAPI.RequestModels
     {
         public int TransactionId { get; set; }
 
-        public int? ProductId { get; set; }
+        public int ProductId { get; set; }
 
-        public int? WarehouseId { get; set; }
+        public int WarehouseId { get; set; }
 
         public TransactionType TransactionType { get; set; }
 

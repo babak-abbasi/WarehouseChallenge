@@ -16,35 +16,21 @@ namespace WarehouseChallenge.Infrastructure.Repositories
             _warehouseDbContext = warehouseDbContext;
         }
 
-        public void AddNewProduct(Product product)
+        public string AddNewProduct(Product product)
         {
             try
             {
-                _warehouseDbContext.Database.ExecuteSqlRaw(
-                    "EXEC AddNewProduct @ProductId, @ProductName, @Price, @StockQuantity",
-                    new SqlParameter("@ProductId", product.ProductId),
-                    new SqlParameter("@ProductName", product.ProductName),
-                    new SqlParameter("@Price", product.Price),
-                    new SqlParameter("@StockQuantity", product.StockQuantity));
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
+                var result = _warehouseDbContext.Database.SqlQueryRaw<string>(
+                    "EXEC AddNewProduct @ProductId, @ProductName, @Price",
+                        new SqlParameter("@ProductId", product.ProductId),
+                        new SqlParameter("@ProductName", product.ProductName),
+                        new SqlParameter("@Price", product.Price))
+                    .ToList()
+                    .FirstOrDefault();
 
-        public void AddNewTransaction(Transaction transaction)
-        {
-            try
-            {
-                _warehouseDbContext.Database.ExecuteSqlRaw(
-                    "EXEC AddNewTransaction @TransactionId, @ProductID, @WarehouseID, @TransactionType, @Quantity, @TransactionDate",
-                    new SqlParameter("@TransactionId", transaction.TransactionId),
-                    new SqlParameter("@ProductID", transaction.ProductId),
-                    new SqlParameter("@WarehouseID", transaction.WarehouseId),
-                    new SqlParameter("@TransactionType", transaction.TransactionType),
-                    new SqlParameter("@Quantity", transaction.Quantity),
-                    new SqlParameter("@TransactionDate", transaction.TransactionDate));
+                if (result is not null)
+                    return result;
+                else return "There has been an issue in Database please check with administrator";
             }
             catch (Exception)
             {

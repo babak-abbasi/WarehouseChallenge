@@ -1,4 +1,4 @@
-﻿namespace WarehouseChallenge.Domain
+﻿namespace WarehouseChallenge.Domain.Enum
 {
     public enum TransactionType
     {

@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using WarehouseChallenge.Application.IServices;
+using WarehouseChallenge.Domain.Enum;
 using WarehouseChallenge.WebAPI.RequestModels;
 
 namespace WarehouseChallenge.Controllers
@@ -10,33 +11,29 @@ namespace WarehouseChallenge.Controllers
     {
         private readonly ILogger<WarehouseController> _logger;
         private readonly IProductService _productService;
-        //private readonly WarehouseDbContext _warehouseDbContext;
+        private readonly ITransactionService _transactionService;
 
         public WarehouseController(ILogger<WarehouseController> logger,
-            IProductService productService)
+            IProductService productService,
+            ITransactionService transactionService)
         {
             _logger = logger;
             _productService = productService;
+            _transactionService = transactionService;
         }
 
         [HttpPost(Name = "AddNewProduct")]
         public IActionResult AddNewProduct([FromBody] NewProductModel request)
-        {
-            _productService.AddNewProduct(new()
+            => Ok(_productService.AddNewProduct(new()
             {
                 ProductId = request.ProductId,
                 ProductName = request.ProductName,
-                Price = request.Price,
-                StockQuantity = request.StockQuantity
-            });
-
-            return Ok();
-        }
+                Price = request.Price
+            }));
 
         [HttpPost(Name = "AddNewTransaction")]
         public IActionResult AddNewTransaction([FromBody] NewTransactionModel request)
-        {
-            _productService.AddNewTransaction(new()
+            => Ok(_transactionService.AddNewTransaction(new()
             {
                 TransactionId = request.TransactionId,
                 ProductId = request.ProductId,
@@ -44,9 +41,18 @@ namespace WarehouseChallenge.Controllers
                 Quantity = request.Quantity,
                 TransactionDate = request.TransactionDate,
                 TransactionType = request.TransactionType
-            });
+            }));
 
-            return Ok();
-        }
+        [HttpGet(Name = "ProductStockInWarehouse")]
+        public IActionResult ProductStockInWarehouse([FromQuery] GetProductStockInWarehouseModel request)
+            => Ok(_transactionService.GetProductStockInWarehouse(new()
+            {
+                ProductId = request.ProductId,
+                WarehouseId = request.WarehouseId
+            }));
+
+        [HttpGet(Name = "TransactionsByType")]
+        public IActionResult TransactionsByType([FromQuery] TransactionType request)
+            => Ok(_transactionService.GetTransactionsByType(request));
     }
 }

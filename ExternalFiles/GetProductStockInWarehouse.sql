@@ -1,17 +1,23 @@
 CREATE PROCEDURE GetProductStockInWarehouse
 (
-    @ProductId INT
+    @ProductId INT,
+	@WarehouseId INT
 )
 AS
 BEGIN
     IF NOT EXISTS (SELECT 1 FROM Products WHERE ProductId = @ProductId)
     BEGIN
-        RAISERROR('Product with ProductId %d does not exist', 16, 1, @ProductId);
+        Select -1
         RETURN;
     END
 
-    SELECT StockQuantity
-    FROM Products
-    WHERE ProductId = @ProductId;
+	IF NOT EXISTS (SELECT 1 FROM Warehouses WHERE WarehouseId = @WarehouseId)
+    BEGIN
+        Select -1
+        RETURN;
+    END
+
+    Select (COALESCE((SELECT SUM(Quantity) FROM Warehouse..Transactions WHERE ProductID = @ProductId AND WarehouseID = @WarehouseId AND TransactionType = 'Purchase'), 0) 
+	- COALESCE((SELECT SUM(Quantity) FROM Warehouse..Transactions WHERE ProductID = @ProductId AND WarehouseID = @WarehouseId AND TransactionType = 'Sale'), 0))
 END;
 GO
